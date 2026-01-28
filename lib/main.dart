@@ -121,6 +121,33 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     });
   }
 
+  void _onSquare() {
+    if (_expression.isEmpty) return;
+    
+    setState(() {
+      _expression = '($_expression)*($_expression)';
+      _updateResult();
+    });
+  }
+
+  void _onModulo() {
+    if (_expression.isEmpty) return;
+    
+    // Prevent multiple consecutive operators
+    if (_expression.endsWith('+') ||
+        _expression.endsWith('-') ||
+        _expression.endsWith('*') ||
+        _expression.endsWith('/') ||
+        _expression.endsWith('%')) {
+      return;
+    }
+    
+    setState(() {
+      _expression += ' % ';
+      _updateResult();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -222,6 +249,17 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                                 _buildButton('C', () => _onClear(), isOperator: true, width: 80),
                                 _buildButton('⌫', () => _onBackspace(), isOperator: true, width: 80),
                                 _buildButton('/', () => _onOperatorPressed('/'), isOperator: true, width: 80),
+                              ],
+                            ),
+                            const SizedBox(height: 15),
+                            
+                            // Row 1.5: Square, Modulo
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _buildButton('x²', () => _onSquare(), isOperator: true, width: 80),
+                                _buildButton('%', () => _onModulo(), isOperator: true, width: 80),
+                                _buildButton('', () {}, isOperator: true, width: 80),
                               ],
                             ),
                             const SizedBox(height: 15),
